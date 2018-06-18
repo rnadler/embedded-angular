@@ -2,13 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>EmbeddedAngular</title>
+  <title>Embedded Angular</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
+<div id ="appContainer" style="display: none">
+  <div>
+    <p class ="notification" id="appError" style="display: none">
+      Something went wrong! Try again later.
+    </p>
+  </div>
   <app-root></app-root>
+  <hr>
+  <br>
+  <a id="removeLink" class="remove">Remove</a>
+  <br>
+  <button onclick="clickMe()">Click me</button>
+</div>
+<script>
+  var DELAY_MS = 20;
+  var retryCount = 0;
+  function subscribeToEvents() {
+    if (!window.messagingService) {
+      retryCount++;
+      setTimeout(function (){ subscribeToEvents() }, DELAY_MS);
+      return;
+    }
+    console.log('Waited ' + retryCount * DELAY_MS + ' ms to setup Button Events.');
+    document.getElementById('appContainer').style.display = 'block';
+    window.messagingService.zone.run(function () {
+      window.messagingService.service.ofClass('AngularEvent')
+        .subscribe(function (event) {
+          console.log('AngularEvent: source=' + event.source  + ' value=' + event.value);
+          document.getElementById('appError').style.display = 'none';
+
+          if (event.value === 'appLoaded') {
+            document.getElementById('appContainer').style.display = 'block';
+          }
+
+          if (event.value === 'startEdit') {
+            document.getElementById('removeLink').style.display = 'none';
+          }
+          else if (event.value === 'endEdit'){
+            document.getElementById('removeLink').style.display = 'block';
+          }
+          else if (event.value === 'hasError'){
+            document.getElementById('appError').style.display = 'block';
+          }
+        });
+    });
+  }
+
+  function clickMe() {
+    window.messagingService.zone.run(function () {
+      window.messagingService.service.publishClass('HtmlEvent', 'clickMe', 'clicked!')
+    });
+  }
+
+  subscribeToEvents();
+
+</script>
 </body>
 </html>
