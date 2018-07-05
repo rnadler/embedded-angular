@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {MessagingService} from './messaging.service';
 import {AngularEvent, HtmlEvent} from './event.types';
+import {NgInterop} from './ng.interop';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
   title = 'embedded-angular';
   showRemove = true;
 
-  constructor(private messagingService: MessagingService) {
+  constructor(private messagingService: MessagingService, ngInterop: NgInterop) {
     messagingService.of(HtmlEvent).subscribe((be) =>
       console.log(`AppComponent: HtmlEvent source=${be.source} value=${be.value}`));
   }

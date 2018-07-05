@@ -24,18 +24,10 @@
   <button onclick="clickMe()">Click me</button>
 </div>
 <script>
-  var DELAY_MS = 20;
-  var retryCount = 0;
   function subscribeToEvents() {
-    if (!window.messagingService) {
-      retryCount++;
-      setTimeout(function (){ subscribeToEvents() }, DELAY_MS);
-      return;
-    }
-    console.log('Waited ' + retryCount * DELAY_MS + ' ms to setup Button Events.');
     document.getElementById('appContainer').style.display = 'block';
-    window.messagingService.zone.run(function () {
-      window.messagingService.service.ofClass('AngularEvent')
+    window.ngInterop.zone.run(function () {
+      window.ngInterop.service.ofClass('AngularEvent')
         .subscribe(function (event) {
           console.log('AngularEvent: source=' + event.source  + ' value=' + event.value);
           document.getElementById('appError').style.display = 'none';
@@ -58,12 +50,11 @@
   }
 
   function clickMe() {
-    window.messagingService.zone.run(function () {
-      window.messagingService.service.publishClass('HtmlEvent', 'clickMe', 'clicked!')
+    window.ngInterop.zone.run(function () {
+      window.ngInterop.service.publishClass('HtmlEvent', 'clickMe', 'clicked!')
     });
   }
-
-  subscribeToEvents();
+  window['NgInteropInitCallback'] = subscribeToEvents;
 
 </script>
 </body>
