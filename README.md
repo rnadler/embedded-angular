@@ -1,6 +1,6 @@
 # Embedded Angular
 
-[![Build Status](https://travis-ci.org/rnadler/embedded-angular.svg?branch=master)](https://travis-ci.org/rnadler/embedder-angular)
+[![Build Status](https://travis-ci.org/rnadler/embedded-angular.svg?branch=master)](https://travis-ci.org/rnadler/embedded-angular)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
