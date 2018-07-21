@@ -7,53 +7,54 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-</head>
+  <!-- Bootstrap 4: See https://getbootstrap.com/docs/4.1/getting-started/introduction -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+  </head>
 <body>
-<div id ="appContainer" style="display: none">
-  <div>
-    <p class ="notification" id="appError" style="display: none">
-      Something went wrong! Try again later.
-    </p>
+<div style="text-align:center">
+  <h1>
+    Welcome to embedded-angular!
+  </h1>
+</div>
+<div class="card">
+  <h5 class="card-header">Angular Application</h5>
+  <div class="card-body" id="loadingContainer">
+    <span>The app is loading...</span>
   </div>
-  <app-root></app-root>
-  <hr>
-  <br>
-  <a id="removeLink" class="remove">Remove</a>
-  <br>
-  <button onclick="clickMe()">Click me</button>
+  <div class="card-body" id="appContainer" style="display: none">
+    <app-root></app-root>
+  </div>
+</div>
+<div class="card">
+  <h5 class="card-header">HTML Components</h5>
+  <div class="card-body">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn" id="removeButton">Remove</button>
+      <br>
+      <button type="button" class="btn" onclick="clickMe()">Click me</button>
+    </div>
+  </div>
 </div>
 <script>
   function subscribeToEvents() {
+    document.getElementById('loadingContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
-    window.ngInterop.zone.run(function () {
-      window.ngInterop.service.ofClass('AngularEvent')
-        .subscribe(function (event) {
-          console.log('AngularEvent: source=' + event.source  + ' value=' + event.value);
-          document.getElementById('appError').style.display = 'none';
-
-          if (event.value === 'appLoaded') {
-            document.getElementById('appContainer').style.display = 'block';
-          }
-
-          if (event.value === 'startEdit') {
-            document.getElementById('removeLink').style.display = 'none';
-          }
-          else if (event.value === 'endEdit'){
-            document.getElementById('removeLink').style.display = 'block';
-          }
-          else if (event.value === 'hasError'){
-            document.getElementById('appError').style.display = 'block';
-          }
-        });
+    window.ngInterop.subscribeToClass('AngularEvent', function (event) {
+      console.log('AngularEvent: source=' + event.source + ' value=' + event.value);
+      if (event.value === 'startEdit') {
+        document.getElementById('removeButton').className = 'btn disabled';
+      }
+      else if (event.value === 'endEdit') {
+        document.getElementById('removeButton').className = 'btn';
+      }
     });
   }
 
   function clickMe() {
-    window.ngInterop.zone.run(function () {
-      window.ngInterop.service.publishClass('HtmlEvent', 'clickMe', 'clicked!')
-    });
+    var randomString = Math.random().toString(36).substr(2, 5);
+    window.ngInterop.publishToClass('HtmlEvent', 'clickMe', randomString);
   }
+
   window['NgInteropInitCallback'] = subscribeToEvents;
 
 </script>

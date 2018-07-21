@@ -1,19 +1,21 @@
 import {Injectable, NgZone} from '@angular/core';
-import {AngularEvent, HtmlEvent} from './event.types';
+import {AngularEvent, EventCallbackFunction, HtmlEvent} from './event.types';
 import {MessagingService} from './messaging.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgInterop {
-  private typeMap: any = {};
+  public static readonly ANGULAR_EVENT: string = 'AngularEvent';
+  public static readonly HTML_EVENT: string = 'HtmlEvent';
+  private typeClassMap: any = {};
   private readonly initCallback: any;
 
   constructor(private ngZone: NgZone, private messagingService: MessagingService) {
-    this.typeMap['AngularEvent'] =  AngularEvent;
-    this.typeMap['HtmlEvent'] =  HtmlEvent;
+    this.typeClassMap[NgInterop.ANGULAR_EVENT] =  AngularEvent;
+    this.typeClassMap[NgInterop.HTML_EVENT] =  HtmlEvent;
     this.initCallback = window['NgInteropInitCallback'];
-    window['ngInterop'] = {service: this, zone: this.ngZone};
+    window['ngInterop'] = this;
     this.init();
   }
   private init() {
@@ -23,10 +25,16 @@ export class NgInterop {
     }
     this.initCallback();
   }
-  public ofClass(className: string): any {
-    return this.messagingService.of(this.typeMap[className]);
+  public subscribeToClass(className: string, callBack: EventCallbackFunction): any {
+    const self = this;
+    this.ngZone.run(() => {
+      this.messagingService.of(self.typeClassMap[className]).subscribe(callBack);
+    });
   }
-  public publishClass(className: string, source: string, value: string): any {
-    this.messagingService.publish(new this.typeMap[className](source, value));
+  public publishToClass(className: string, source: string, value: string): any {
+    const self = this;
+    this.ngZone.run(() => {
+      self.messagingService.publish(new self.typeClassMap[className](source, value));
+    });
   }
 }

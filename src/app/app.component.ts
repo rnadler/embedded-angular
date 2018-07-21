@@ -1,25 +1,25 @@
 import {Component} from '@angular/core';
-import {MessagingService} from './messaging.service';
-import {AngularEvent, HtmlEvent} from './event.types';
 import {NgInterop} from './ng.interop';
+import {HtmlEvent} from './event.types';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'embedded-angular';
   showRemove = true;
+  htmlEventData = '';
 
-  constructor(private messagingService: MessagingService, ngInterop: NgInterop) {
-    messagingService.of(HtmlEvent).subscribe((be) =>
-      console.log(`AppComponent: HtmlEvent source=${be.source} value=${be.value}`));
+  constructor(private ngInterop: NgInterop) {
+    ngInterop.subscribeToClass(NgInterop.HTML_EVENT, (event: HtmlEvent) => {
+      console.log(`AppComponent: HtmlEvent source=${event.source} value=${event.value}`);
+      this.htmlEventData = event.value + ' from ' + event.source;
+    });
   }
 
   toggleRemoveLink() {
     this.showRemove = !this.showRemove;
-    this.messagingService.publish(new AngularEvent('AppComponent.showRemove',
-      this.showRemove ? 'endEdit' : 'startEdit'));
+    this.ngInterop.publishToClass(NgInterop.ANGULAR_EVENT, 'AppComponent.showRemove',
+      this.showRemove ? 'endEdit' : 'startEdit');
   }
 }
