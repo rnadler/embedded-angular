@@ -12,7 +12,7 @@
   </head>
 <body>
 <div style="text-align:center">
-  <h1>
+  <h1 id="title">
     Welcome to embedded-angular!
   </h1>
 </div>
@@ -26,12 +26,18 @@
   </div>
 </div>
 <div class="card">
+  <h5 class="card-header">Angular Text Component</h5>
+  <div class="card-body" id="textContainer">
+    <app-text-component></app-text-component>
+  </div>
+</div>
+<div class="card">
   <h5 class="card-header">HTML Components</h5>
   <div class="card-body">
     <div class="btn-group-vertical">
-      <button type="button" class="btn" id="removeButton">Remove</button>
+      <button id="removeButton" type="button" class="btn" id="removeButton">Remove</button>
       <br>
-      <button type="button" class="btn" onclick="clickMe()">Click me</button>
+      <button id="clickMe" type="button" class="btn" onclick="clickMe()">Click me</button>
     </div>
   </div>
 </div>
@@ -41,11 +47,8 @@
     document.getElementById('appContainer').style.display = 'block';
     window.ngInterop.subscribeToClass('AngularEvent', function (event) {
       console.log('AngularEvent: source=' + event.source + ' value=' + event.value);
-      if (event.value === 'startEdit') {
-        document.getElementById('removeButton').className = 'btn disabled';
-      }
-      else if (event.value === 'endEdit') {
-        document.getElementById('removeButton').className = 'btn';
+      if (event.source === 'AppComponent.toggleRemove') {
+        document.getElementById('removeButton').disabled = event.value === 'showRemove';
       }
     });
   }

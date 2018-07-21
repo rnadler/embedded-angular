@@ -4,7 +4,11 @@ import {HtmlEvent} from './event.types';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  template: `<button id="toggleRemoveButton" (click)="toggleRemoveButton()">Toggle Remove Button</button>
+  <br><br>
+  <div>
+    <strong>Html Event:</strong><span id="htmlEventData"> {{htmlEventData}}</span>
+  </div>`
 })
 export class AppComponent {
   showRemove = true;
@@ -17,9 +21,9 @@ export class AppComponent {
     });
   }
 
-  toggleRemoveLink() {
+  toggleRemoveButton() {
     this.showRemove = !this.showRemove;
-    this.ngInterop.publishToClass(NgInterop.ANGULAR_EVENT, 'AppComponent.showRemove',
-      this.showRemove ? 'endEdit' : 'startEdit');
+    this.ngInterop.publishToClass(NgInterop.ANGULAR_EVENT, 'AppComponent.toggleRemove',
+      this.showRemove ? 'hideRemove' : 'showRemove');
   }
 }

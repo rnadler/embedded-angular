@@ -28,7 +28,7 @@ export class NgInterop {
   public subscribeToClass(className: string, callBack: EventCallbackFunction): any {
     const self = this;
     this.ngZone.run(() => {
-      this.messagingService.of(self.typeClassMap[className]).subscribe(callBack);
+      self.messagingService.of(self.typeClassMap[className]).subscribe(callBack);
     });
   }
   public publishToClass(className: string, source: string, value: string): any {

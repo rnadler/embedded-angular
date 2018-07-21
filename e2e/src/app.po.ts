@@ -5,7 +5,23 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  getElementById(elementId: string) {
+    return element(by.id(elementId));
+  }
+
+  clickElementById(elementId: string) {
+    this.getElementById(elementId).click();
+  }
+
+  isElementEnabledFindById(elementId: string) {
+    return this.getElementById(elementId).isEnabled();
+  }
+
+  isElementDisplayedFindById(elementId: string) {
+    return this.getElementById(elementId).isDisplayed();
+  }
+
+  getElementTextFindById(elementId: string) {
+    return this.getElementById(elementId).getText();
   }
 }
