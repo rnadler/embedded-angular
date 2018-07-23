@@ -4,7 +4,7 @@ import {HtmlEvent} from './event.types';
 
 @Component({
   selector: 'app-root',
-  template: `<button id="toggleRemoveButton" (click)="toggleRemoveButton()">Toggle Remove Button</button>
+  template: `<button id="toggleRemoveButton" class="btn" (click)="toggleRemoveButton()">Toggle Remove Button</button>
   <br><br>
   <div>
     <strong>Html Event:</strong><span id="htmlEventData"> {{htmlEventData}}</span>
@@ -16,7 +16,8 @@ export class AppComponent {
 
   constructor(private ngInterop: NgInterop) {
     ngInterop.subscribeToClass(NgInterop.HTML_EVENT, (event: HtmlEvent) => {
-      console.log(`AppComponent: HtmlEvent source=${event.source} value=${event.value}`);
+      const msg = `Got HtmlEvent source=${event.source} value=${event.value}`;
+      ngInterop.publishToClass(NgInterop.LOG_EVENT, 'AppComponent', msg);
       this.htmlEventData = event.value + ' from ' + event.source;
     });
   }

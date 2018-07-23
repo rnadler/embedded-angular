@@ -12,9 +12,9 @@
   </head>
 <body>
 <div style="text-align:center">
-  <h1 id="title">
+  <h2 id="title">
     Welcome to embedded-angular!
-  </h1>
+  </h2>
 </div>
 <div class="card">
   <h5 class="card-header">Angular Application</h5>
@@ -26,19 +26,22 @@
   </div>
 </div>
 <div class="card">
-  <h5 class="card-header">Angular Text Component</h5>
-  <div class="card-body" id="textContainer">
-    <app-text-component></app-text-component>
+  <h5 class="card-header">HTML Components</h5>
+  <div class="card-body">
+    <div class="btn-group">
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+        <button id="removeButton" type="button" class="btn" onclick="removeClick()">Remove</button>
+      </div>
+      <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button id="clickMe" type="button" class="btn" onclick="clickMe()">Click me</button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="card">
-  <h5 class="card-header">HTML Components</h5>
-  <div class="card-body">
-    <div class="btn-group-vertical">
-      <button id="removeButton" type="button" class="btn" id="removeButton">Remove</button>
-      <br>
-      <button id="clickMe" type="button" class="btn" onclick="clickMe()">Click me</button>
-    </div>
+  <h5 class="card-header">Angular Log Component</h5>
+  <div class="card-body" id="textContainer">
+    <app-log-component></app-log-component>
   </div>
 </div>
 <script>
@@ -46,16 +49,21 @@
     document.getElementById('loadingContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
     window.ngInterop.subscribeToClass('AngularEvent', function (event) {
-      console.log('AngularEvent: source=' + event.source + ' value=' + event.value);
+      var msg = 'Got AngularEvent: source=' + event.source + ' value=' + event.value;
+      window.ngInterop.publishToClass('LogEvent', 'Html', msg);
       if (event.source === 'AppComponent.toggleRemove') {
         document.getElementById('removeButton').disabled = event.value === 'showRemove';
       }
     });
   }
-
+  function getRandomString() {
+    return Math.random().toString(36).substr(2, 5);
+  }
   function clickMe() {
-    var randomString = Math.random().toString(36).substr(2, 5);
-    window.ngInterop.publishToClass('HtmlEvent', 'clickMe', randomString);
+    window.ngInterop.publishToClass('HtmlEvent', 'clickMe', getRandomString());
+  }
+  function removeClick() {
+    window.ngInterop.publishToClass('LogEvent', 'removeClick', getRandomString());
   }
 
   window['NgInteropInitCallback'] = subscribeToEvents;
