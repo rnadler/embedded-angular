@@ -52,7 +52,7 @@
       var msg = 'Got AngularEvent: source=' + event.source + ' value=' + event.value;
       window.ngInterop.publishToClass('LogEvent', 'Html', msg);
       if (event.source === 'AppComponent.toggleRemove') {
-        document.getElementById('removeButton').disabled = event.value === 'showRemove';
+        document.getElementById('removeButton').disabled = event.value === 'hideRemove';
       }
     });
   }

@@ -16,10 +16,13 @@ describe('workspace-project App', () => {
   it('should toggle remove button', () => {
     page.navigateTo();
     expect(page.isElementEnabledFindById('removeButton')).toEqual(true);
+    expect(page.getElementTextFindById('toggleStatus')).toContain('enabled');
     page.clickElementById('toggleRemoveButton');
     expect(page.isElementEnabledFindById('removeButton')).toEqual(false);
+    expect(page.getElementTextFindById('toggleStatus')).toContain('disabled');
     page.clickElementById('toggleRemoveButton');
     expect(page.isElementEnabledFindById('removeButton')).toEqual(true);
+    expect(page.getElementTextFindById('toggleStatus')).toContain('enabled');
   });
 
   it('should show clickMe text', () => {

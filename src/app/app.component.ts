@@ -5,7 +5,7 @@ import {HtmlEvent} from './event.types';
 @Component({
   selector: 'app-root',
   template: `<button id="toggleRemoveButton" class="btn" (click)="toggleRemoveButton()">Toggle Remove Button</button>
-  &nbsp;<span>Remove button is {{showRemove ? 'enabled' : 'disabled'}}.</span>
+  &nbsp;<span id="toggleStatus">Remove button is {{showRemove ? 'enabled' : 'disabled'}}.</span>
   <br><br>
   <div>
     <strong>Html Event:</strong><span id="htmlEventData"> {{htmlEventData}}</span>
@@ -26,6 +26,6 @@ export class AppComponent {
   toggleRemoveButton() {
     this.showRemove = !this.showRemove;
     this.ngInterop.publishToClass(NgInterop.ANGULAR_EVENT, 'AppComponent.toggleRemove',
-      this.showRemove ? 'hideRemove' : 'showRemove');
+      this.showRemove ? 'showRemove' : 'hideRemove');
   }
 }
