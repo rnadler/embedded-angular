@@ -31,6 +31,6 @@ describe('workspace-project App', () => {
 
   it('should show the text component', () => {
     page.navigateTo();
-    expect(page.getElementTextFindById('logComponent')).toContain('Log events');
+    expect(page.getElementTextFindById('logComponent')).toContain('Events log');
   });
 });

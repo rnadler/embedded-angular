@@ -5,6 +5,7 @@ import {HtmlEvent} from './event.types';
 @Component({
   selector: 'app-root',
   template: `<button id="toggleRemoveButton" class="btn" (click)="toggleRemoveButton()">Toggle Remove Button</button>
+  &nbsp;<span>Remove button is {{showRemove ? 'enabled' : 'disabled'}}.</span>
   <br><br>
   <div>
     <strong>Html Event:</strong><span id="htmlEventData"> {{htmlEventData}}</span>
